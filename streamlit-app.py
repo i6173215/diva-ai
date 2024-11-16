@@ -83,7 +83,7 @@ def main():
             st.chat_message("assistant", avatar="\U0001F471").write(msg)
             logging.info("Diva response displayed: %s", msg)
         else:
-            st.error("[ERROR] The response did not contain an answer.")
+            st.error("[Ошибка] Возможно сервер отдыхает, загрузится через 10 минут. Пожалуйста, подождите.")
             logging.error("The response did not contain an answer: %s", response)
 
 if __name__ == "__main__":
