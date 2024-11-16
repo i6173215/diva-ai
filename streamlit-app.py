@@ -15,6 +15,12 @@ API_URL = os.getenv("API_URL")
 ICON_USER = "\U0001F5E8"
 ICON_ASSISTANT = "\U0001F469"
 
+# Base st config
+st.beta_set_page_config(page_title='DIVA AI', 
+                        page_icon="assets/logo.png", 
+                        layout='wide', 
+                        initial_sidebar_state='auto')
+
 def diva_query(messages):
     """
     Send a query to the diva and return the response.
