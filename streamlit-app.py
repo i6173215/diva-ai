@@ -17,7 +17,7 @@ ICON_ASSISTANT = "\U0001F469"
 
 # Base st config
 st.set_page_config(page_title='DIVA AI', 
-                        page_icon="assets/logo-1.png", 
+                        page_icon="assets/logo-2.png", 
                         layout='wide', 
                         initial_sidebar_state='auto')
 
