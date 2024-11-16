@@ -12,6 +12,9 @@ logging.basicConfig(level=logging.INFO)
 HF_KEY = os.getenv("HF_KEY")
 API_URL = os.getenv("API_URL")
 
+ICON_USER = "\U0001F5E8"
+ICON_ASSISTANT = "\U0001F469"
+
 def diva_query(messages):
     """
     Send a query to the diva and return the response.
@@ -47,7 +50,7 @@ def display_messages(messages):
     """
     logging.info("Displaying messages: %s", messages)
     for msg in messages:
-        avatar = "\U0001F5E8" if msg["role"] == "user" else "\U0001F471"
+        avatar = ICON_USER if msg["role"] == "user" else ICON_ASSISTANT
         st.chat_message(msg["role"], avatar=avatar).write(msg["content"])
 
 def main():
@@ -71,7 +74,7 @@ def main():
         st.session_state.messages.append({"role": "user", "content": prompt})
 
         # Display user message
-        st.chat_message("user", avatar="\U0001F5E8").write(prompt)
+        st.chat_message("user", avatar=ICON_USER).write(prompt)
 
         # Get response from diva
         response = diva_query(st.session_state.messages)
@@ -80,7 +83,7 @@ def main():
         if "answer" in response:
             msg = response["answer"]
             st.session_state.messages.append({"role": "assistant", "content": msg})
-            st.chat_message("assistant", avatar="\U0001F471").write(msg)
+            st.chat_message("assistant", avatar=ICON_ASSISTANT).write(msg)
             logging.info("Diva response displayed: %s", msg)
         else:
             st.error("[Ошибка] Возможно сервер отдыхает, загрузится через 10 минут. Пожалуйста, подождите.")
