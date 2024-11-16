@@ -92,8 +92,12 @@ def main():
             st.chat_message("assistant", avatar=ICON_ASSISTANT).write(msg)
             logging.info("Diva response displayed: %s", msg)
         else:
-            st.error("[Ошибка] Возможно сервер отдыхает, загрузится через 10 минут. Пожалуйста, подождите.")
-            logging.error("The response did not contain an answer: %s", response)
+            if "error" in response:
+                st.error("[Ошибка] Internal Server Error. Проверьте логи. Возможно OOM, попробуйте через несколько секунд или уменьшить количество сообщений.")
+                logging.error("Internal Server Error: %s", response["error"])
+            else:
+                st.error("[Ошибка] Возможно сервер отдыхает, загрузится через 10 минут. Пожалуйста, подождите.")
+                logging.error("The response did not contain an answer: %s", response)
 
 if __name__ == "__main__":
     main()
