@@ -8,7 +8,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Load environment variables from a .env file
-dotenv.load_dotenv()
+#dotenv.load_dotenv()
 HF_KEY = os.getenv("HF_KEY")
 API_URL = os.getenv("API_URL")
 
