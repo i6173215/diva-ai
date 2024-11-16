@@ -62,8 +62,11 @@ def display_messages(messages):
 def main():
     logging.info("Starting Streamlit app")
     # Streamlit app title and caption
-    st.title(f"{ICON_TITLE} DIVA AI Chat Room {ICON_TITLE}")
-    st.caption("[Версия 0.1 | 2024.11]")
+    #st.title(f"{ICON_TITLE} DIVA AI Chat Room {ICON_TITLE}")
+    #st.caption("[Версия 0.1 | 2024.11]")
+    st.markdown(f"<h1 style='text-align: center;'>{ICON_TITLE} DIVA AI Chat Room {ICON_TITLE}</h1>", unsafe_allow_html=True)
+
+    st.markdown("<h2 style='text-align: center;'>[Версия 0.1 | 2024.11]</h2>", unsafe_allow_html=True)
 
     # Initialize session state for messages if not already present
     if "messages" not in st.session_state:
