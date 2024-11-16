@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
-#import dotenv
+
+# import dotenv
 import os
 import logging
 
@@ -8,18 +9,23 @@ import logging
 logging.basicConfig(level=logging.INFO)
 
 # Load environment variables from a .env file
-#dotenv.load_dotenv()
+# dotenv.load_dotenv()
+
 HF_KEY = os.getenv("HF_KEY")
 API_URL = os.getenv("API_URL")
 
-ICON_USER = "\U0001F5E8"
-ICON_ASSISTANT = "\U0001F469"
-ICON_TITLE = "\U0001F4BB" # laptop  
+ICON_USER = "\U0001f5e8"
+ICON_ASSISTANT = "\U0001f469"
+ICON_TITLE = "\U0001f4bb"  # laptop
+
 # Base st config
-st.set_page_config(page_title='DIVA AI', 
-                        page_icon="assets/logo-2.png", 
-                        layout='wide', 
-                        initial_sidebar_state='auto')
+st.set_page_config(
+    page_title="DIVA AI",
+    page_icon="assets/logo-2.png",
+    layout="wide",
+    initial_sidebar_state="auto",
+)
+
 
 def diva_query(messages):
     """
@@ -36,16 +42,17 @@ def diva_query(messages):
         "messages": messages,
         "sk": [1, 2, 3, 4],
         "iv": [5, 6, 7, 8],
-        "user_id": "user321"
+        "user_id": "user321",
     }
     headers = {
         "Accept": "application/json",
         "Authorization": f"Bearer {HF_KEY}",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
-    response = requests.post(API_URL, headers=headers, json=payload, timeout=2500)
+    response = requests.post(API_URL, headers=headers, json=payload, timeout=500)
     logging.info("Received response from diva: %s", response.json())
     return response.json()
+
 
 def display_messages(messages):
     """
@@ -59,13 +66,20 @@ def display_messages(messages):
         avatar = ICON_USER if msg["role"] == "user" else ICON_ASSISTANT
         st.chat_message(msg["role"], avatar=avatar).write(msg["content"])
 
+
 def main():
     logging.info("Starting Streamlit app")
 
     # Streamlit app title and caption
-    st.markdown(f"<h3 style='text-align: center;'>{ICON_TITLE} DIVA AI Chat Room {ICON_TITLE}</h3>", unsafe_allow_html=True)
+    st.markdown(
+        f"<h3 style='text-align: center;'>{ICON_TITLE} DIVA AI Chat Room {ICON_TITLE}</h3>",
+        unsafe_allow_html=True,
+    )
 
-    st.markdown("<h6 style='text-align: center; '>[2024.11 | Версия 0.1 | Только для тестирования]</h6>", unsafe_allow_html=True)
+    st.markdown(
+        "<h6 style='text-align: center; '>[2024.11 | Версия 0.1 | Только для тестирования]</h6>",
+        unsafe_allow_html=True,
+    )
 
     # Initialize session state for messages if not already present
     if "messages" not in st.session_state:
@@ -94,12 +108,20 @@ def main():
             st.chat_message("assistant", avatar=ICON_ASSISTANT).write(msg)
             logging.info("Diva response displayed: %s", msg)
         else:
+            # Handle errors
             if "error" in response:
-                st.error("[Ошибка] Internal Server Error. Проверьте логи. Возможно OOM, попробуйте через несколько секунд или уменьшить количество сообщений.")
+                # If the response contains an error message - server live but error
+                st.error(
+                    "[Ошибка] Internal Server Error. Проверьте логи. Возможно OOM, попробуйте через несколько секунд или уменьшить количество сообщений."
+                )
                 logging.error("Internal Server Error: %s", response["error"])
             else:
-                st.error("[Ошибка] Возможно сервер отдыхает, загрузится через 10 минут. Пожалуйста, подождите.")
+                # If the response does not contain an answer - server down or sleeping
+                st.error(
+                    "[Ошибка] Возможно сервер отдыхает, загрузится через 10 минут. Пожалуйста, подождите."
+                )
                 logging.error("The response did not contain an answer: %s", response)
+
 
 if __name__ == "__main__":
     main()
