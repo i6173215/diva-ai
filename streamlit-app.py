@@ -65,7 +65,7 @@ def main():
     # Streamlit app title and caption
     st.markdown(f"<h3 style='text-align: center;'>{ICON_TITLE} DIVA AI Chat Room {ICON_TITLE}</h3>", unsafe_allow_html=True)
 
-    st.markdown("<h6 style='text-align: center;'>[2024.11 | Версия 0.1 | Только для тестирования]</h6>", unsafe_allow_html=True)
+    st.markdown("<h6 style='text-align: center; italic;'>[2024.11 | Версия 0.1 | Только для тестирования]</h6>", unsafe_allow_html=True) 
 
     # Initialize session state for messages if not already present
     if "messages" not in st.session_state:
