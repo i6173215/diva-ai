@@ -14,7 +14,7 @@ API_URL = os.getenv("API_URL")
 
 ICON_USER = "\U0001F5E8"
 ICON_ASSISTANT = "\U0001F469"
-
+ICON_TITLE = "\U0001F4BB" # laptop  
 # Base st config
 st.set_page_config(page_title='DIVA AI', 
                         page_icon="assets/logo-2.png", 
@@ -62,8 +62,8 @@ def display_messages(messages):
 def main():
     logging.info("Starting Streamlit app")
     # Streamlit app title and caption
-    st.title("💬 DIVA")
-    st.caption("AI Chat room")
+    st.title(f"{ICON_TITLE} DIVA AI Chat Room {ICON_TITLE}")
+    st.caption("[Версия 0.1 | 2024.11]")
 
     # Initialize session state for messages if not already present
     if "messages" not in st.session_state:
