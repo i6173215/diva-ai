@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import os
 import logging
+from typing import List, Dict, Any
 
 # Set logging level to INFO
 logging.basicConfig(level=logging.INFO)
@@ -23,7 +24,7 @@ st.set_page_config(
     initial_sidebar_state="auto",
 )
 
-def diva_query(messages):
+def diva_query(messages: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Send a query to the diva and return the response.
 
@@ -51,10 +52,11 @@ def diva_query(messages):
         logging.info("Received response from diva: %s", response.json())
         return response.json()
     except requests.RequestException as e:
-        logging.error("Request failed: %s", e)
-        return {"error": str(e)}
+        # block url error
+        logging.error("Request failed. 503 or OOM")
+        return {"error": "Сервер недоступен.\n1) Попробуйте позже (Перезагрузка сервера 10-15 минут)\n2) Попробуйте уменьшить длину запроса (количество слов)"}
 
-def display_messages(messages):
+def display_messages(messages: List[Dict[str, str]]) -> None:
     """
     Display messages in the chat interface.
 
@@ -66,7 +68,7 @@ def display_messages(messages):
         avatar = ICON_USER if msg["role"] == "user" else ICON_ASSISTANT
         st.chat_message(msg["role"], avatar=avatar).write(msg["content"])
 
-def main():
+def main() -> None:
     """
     Main function to run the Streamlit app for DIVA AI Chat Room.
 
