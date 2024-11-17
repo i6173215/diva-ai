@@ -12,8 +12,8 @@ HF_KEY = os.getenv("HF_KEY")
 API_URL = os.getenv("API_URL")
 
 # Constants for icons
-ICON_USER = "\U0001f5e8"
-ICON_ASSISTANT = "\U0001f469"
+ICON_USER = "\U0001f5e8 Вы:"
+ICON_ASSISTANT = "\U0001f469 DIVA:"
 ICON_TITLE = "\U0001f4bb"  # laptop
 
 # Streamlit page configuration
