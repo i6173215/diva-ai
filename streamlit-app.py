@@ -1,31 +1,27 @@
 import streamlit as st
 import requests
-
-# import dotenv
 import os
 import logging
 
 # Set logging level to INFO
 logging.basicConfig(level=logging.INFO)
 
-# Load environment variables from a .env file
-# dotenv.load_dotenv()
-
+# Load environment variables
 HF_KEY = os.getenv("HF_KEY")
 API_URL = os.getenv("API_URL")
 
+# Constants for icons
 ICON_USER = "\U0001f5e8"
 ICON_ASSISTANT = "\U0001f469"
 ICON_TITLE = "\U0001f4bb"  # laptop
 
-# Base st config
+# Streamlit page configuration
 st.set_page_config(
     page_title="DIVA AI",
     page_icon="assets/logo-2.png",
     layout="wide",
     initial_sidebar_state="auto",
 )
-
 
 def diva_query(messages):
     """
@@ -49,10 +45,14 @@ def diva_query(messages):
         "Authorization": f"Bearer {HF_KEY}",
         "Content-Type": "application/json",
     }
-    response = requests.post(API_URL, headers=headers, json=payload, timeout=500)
-    logging.info("Received response from diva: %s", response.json())
-    return response.json()
-
+    try:
+        response = requests.post(API_URL, headers=headers, json=payload, timeout=500)
+        response.raise_for_status()
+        logging.info("Received response from diva: %s", response.json())
+        return response.json()
+    except requests.RequestException as e:
+        logging.error("Request failed: %s", e)
+        return {"error": str(e)}
 
 def display_messages(messages):
     """
@@ -66,8 +66,14 @@ def display_messages(messages):
         avatar = ICON_USER if msg["role"] == "user" else ICON_ASSISTANT
         st.chat_message(msg["role"], avatar=avatar).write(msg["content"])
 
-
 def main():
+    """
+    Main function to run the Streamlit app for DIVA AI Chat Room.
+
+    This function initializes the Streamlit app, sets up the title and caption,
+    manages the session state for messages, displays previous messages, handles
+    new user input, and processes responses from the DIVA AI.
+    """
     logging.info("Starting Streamlit app")
 
     # Streamlit app title and caption
@@ -77,7 +83,7 @@ def main():
     )
 
     st.markdown(
-        "<h6 style='text-align: center; '>[2024.11 | Версия 0.1 | Только для тестирования]</h6>",
+        "<h6 style='text-align: center;'>[2024.11 | Версия 0.1 | Только для тестирования]</h6>",
         unsafe_allow_html=True,
     )
 
@@ -109,19 +115,9 @@ def main():
             logging.info("Diva response displayed: %s", msg)
         else:
             # Handle errors
-            if "error" in response:
-                # If the response contains an error message - server live but error
-                st.error(
-                    "[Ошибка] Internal Server Error. Проверьте логи. Возможно OOM, попробуйте через несколько секунд или уменьшить количество сообщений."
-                )
-                logging.error("Internal Server Error: %s", response["error"])
-            else:
-                # If the response does not contain an answer - server down or sleeping
-                st.error(
-                    "[Ошибка] Возможно сервер отдыхает, загрузится через 10 минут. Пожалуйста, подождите."
-                )
-                logging.error("The response did not contain an answer: %s", response)
-
+            error_message = response.get("error", "Unknown error occurred.")
+            st.error(f"[Ошибка] {error_message}")
+            logging.error("Error in response: %s", error_message)
 
 if __name__ == "__main__":
     main()
