@@ -19,7 +19,7 @@ ICON_TITLE = "\U0001f4bb"  # laptop
 # Streamlit page configuration
 st.set_page_config(
     page_title="DIVA AI",
-    page_icon="assets/logo-2.png",
+    page_icon="assets/logo-3.jpg",
     layout="wide",
     initial_sidebar_state="auto",
 )
